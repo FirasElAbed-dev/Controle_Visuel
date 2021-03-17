@@ -1,0 +1,7 @@
+{	
+	"_comment2":"db_connexion utiliser : avec sid et / avec service_name",
+					"user_cnx":"deltasig",
+					"pswd_cnx":"deltasig",
+					"host_cnx":"jdbc:oracle:thin:@172.28.2.156:1521/attibank"
+
+}
