@@ -38,6 +38,7 @@ public class Cheque implements Serializable {
 	private String ribBenif;
 	private String ncpTireur;
 	private String codeBanqBenif;
+	private String agenceTireur;
 	@Column(name = "recto", columnDefinition = "LONGBLOB")
 	@Lob
 	private byte[] recto;
@@ -153,6 +154,12 @@ public class Cheque implements Serializable {
 	}
 	
 	
+	public String getAgenceTireur() {
+		return agenceTireur;
+	}
+	public void setAgenceTireur(String agenceTireur) {
+		this.agenceTireur = agenceTireur;
+	}
 	public String getNcpTireur() {
 		return ncpTireur;
 	}
@@ -163,11 +170,12 @@ public class Cheque implements Serializable {
 	public String toString() {
 		return "Cheque [id=" + id + ", numChq=" + numChq + ", dateTrait=" + dateTrait + ", ribTireur=" + ribTireur
 				+ ", ribBenif=" + ribBenif + ", ncpTireur=" + ncpTireur + ", codeBanqBenif=" + codeBanqBenif
-				+ ", recto=" + Arrays.toString(recto) + ", verso=" + Arrays.toString(verso) + ", signature="
-				+ Arrays.toString(signature) + ", montant=" + montant + ", flagTrait=" + flagTrait + ", motif1="
-				+ motif1 + ", motif2=" + motif2 + ", motif3=" + motif3 + ", motif4=" + motif4 + ", flagReservation="
-				+ flagReservation + "]";
+				+ ", agenceTireur=" + agenceTireur + ", recto=" + Arrays.toString(recto) + ", verso="
+				+ Arrays.toString(verso) + ", signature=" + Arrays.toString(signature) + ", montant=" + montant
+				+ ", flagTrait=" + flagTrait + ", motif1=" + motif1 + ", motif2=" + motif2 + ", motif3=" + motif3
+				+ ", motif4=" + motif4 + ", flagReservation=" + flagReservation + "]";
 	}
+	
 	
 
 

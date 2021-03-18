@@ -48,7 +48,7 @@ public class ChequeService {
 	@Autowired
 	private IChequeRepository chequeRepository;
 	private static Set<String> listImageCheq = new HashSet<String>();
-	
+
 	private static String user_cnx;
 	private static String pswd_cnx;
 	private static String host_cnx;
@@ -58,36 +58,37 @@ public class ChequeService {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-	public  void chargerParamFromJson() {
+
+	public void chargerParamFromJson() {
 		String userDirectory = new File("").getAbsolutePath();
-		JSONParser jsonP = new JSONParser();		
-			JSONObject jsonO;
-			try {
-				jsonO = (JSONObject) jsonP.parse(new FileReader(userDirectory + "/target/param1.json"));
-				host_cnx = (String) jsonO.get("host_cnx");
-				user_cnx = (String) jsonO.get("user_cnx");
-				pswd_cnx = (String) jsonO.get("pswd_cnx");
-				output_path = (String) jsonO.get("output_path");
-				System.out.println("chargement param de cnx ,host_cnx: " + host_cnx + " , user_cnx: " + user_cnx + " , pswd_cnx: "	+ pswd_cnx+" ,output_path : "+output_path);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	
+		JSONParser jsonP = new JSONParser();
+		JSONObject jsonO;
+		try {
+			jsonO = (JSONObject) jsonP.parse(new FileReader(userDirectory + "/target/param1.json"));
+			host_cnx = (String) jsonO.get("host_cnx");
+			user_cnx = (String) jsonO.get("user_cnx");
+			pswd_cnx = (String) jsonO.get("pswd_cnx");
+			output_path = (String) jsonO.get("output_path");
+			System.out.println("chargement param de cnx ,host_cnx: " + host_cnx + " , user_cnx: " + user_cnx
+					+ " , pswd_cnx: " + pswd_cnx + " ,output_path : " + output_path);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
-	public  boolean checkDBcnx() {
+	public boolean checkDBcnx() {
 		boolean access = false;
 		Connection conn2 = null;
-		System.out.println("checkDBcnx ,host_cnx: " + host_cnx + " , user_cnx: " + user_cnx + " , pswd_cnx: " + pswd_cnx);
+		System.out
+				.println("checkDBcnx ,host_cnx: " + host_cnx + " , user_cnx: " + user_cnx + " , pswd_cnx: " + pswd_cnx);
 
 		try {
 			Class.forName("oracle.jdbc.OracleDriver");
@@ -118,7 +119,7 @@ public class ChequeService {
 		return access;
 	}
 
-	public  Connection startDBcnx() {
+	public Connection startDBcnx() {
 		Connection conn2 = null;
 		try {
 			Class.forName("oracle.jdbc.OracleDriver");
@@ -138,7 +139,7 @@ public class ChequeService {
 		return conn2;
 	}
 
-	public  void closecnx(Connection conn2) {
+	public void closecnx(Connection conn2) {
 		try {
 			if (conn2 != null && !conn2.isClosed()) {
 				conn2.close();
@@ -149,23 +150,21 @@ public class ChequeService {
 		}
 	}
 
-	
-	
-	public  Blob getSignature(Connection cnx, String ncp,String age) {
-		 
+	public Blob getSignature(Connection cnx, String ncp, String age) {
+
 		Connection conn = cnx;
 		Blob blobSignat = null;
-		String ncpAge=ncp+age;
-		Map<String, Blob> couple_Signt_NcpAge = new HashMap<String, Blob> ();
-		
+		String ncpAge = ncp + age;
+		Map<String, Blob> couple_Signt_NcpAge = new HashMap<String, Blob>();
+
 		if (conn != null) {
 			// "select p.par_valeur from parametrage p where p.par_code=\'FICHIER_COND\'";
-			 String getSignatureSQL ="select IMAGE from bksig_blob  where chemin =(select IDENT_SIG from bksig_compte where age =\'00201\' and ncp =\'0063450704\')";
+			String getSignatureSQL = "select IMAGE from bksig_blob  where chemin =(select IDENT_SIG from bksig_compte where age =\'00201\' and ncp =\'0063450704\')";
 			try {
 				Statement signatureSTMT = conn.createStatement();
 				ResultSet signatureResult = signatureSTMT.executeQuery(getSignatureSQL);
 				while (signatureResult.next()) {
-					blobSignat = signatureResult.getBlob(1) ;
+					blobSignat = signatureResult.getBlob(1);
 					couple_Signt_NcpAge.put(ncpAge, blobSignat);
 				}
 			} catch (SQLException e) {
@@ -175,14 +174,9 @@ public class ChequeService {
 		}
 		return blobSignat;
 	}
-	
-	
-	
 
-	
-	
-	// extraire les données de chaque fichier data 
-	public  ArrayList manageDataFile(String pathFichData) {
+	// extraire les données de chaque fichier data
+	public ArrayList manageDataFile(String pathFichData) {
 		ArrayList<ArrayList<String>> listOListsData = new ArrayList<ArrayList<String>>();
 		ArrayList<String> listFichData = new ArrayList<String>();
 		ArrayList listCheques = new ArrayList();
@@ -251,6 +245,8 @@ public class ChequeService {
 					mapCheq.put("Cm7numCHEQ", Cm7numCHEQ);
 					mapCheq.put("Cm7NumAgenc", Cm7NumAgenc);
 					mapCheq.put("Cm7NumCOMPT", Cm7NumCOMPT);
+					mapCheq.put("MntChequ", MntChequ);
+					mapCheq.put("Cm7codeGuich", Cm7codeGuich);
 
 					listCheques.add(mapCheq);
 				}
@@ -274,178 +270,141 @@ public class ChequeService {
 		return listCheques;
 	}
 
-	public  Set<String> getAllPictFromDirectory(String pathDirectory) {
+	public Set<String> getAllPictFromDirectory(String pathDirectory) {
 
-			File dir = new File(pathDirectory);
-			File[] liste = dir.listFiles();
-			for (File item : liste) {
-				if (item.isFile()) {
-					if (item.getName().endsWith(".JPEG")&& item.getName().startsWith("IMAG_CHQ_")) {
-						listImageCheq.add(item.getAbsolutePath());
-						System.out.println(item.getName());	
-					}				
-
-				} else if (item.isDirectory()) {
-					getAllPictFromDirectory(item.getAbsolutePath());
+		File dir = new File(pathDirectory);
+		File[] liste = dir.listFiles();
+		for (File item : liste) {
+			if (item.isFile()) {
+				if (item.getName().endsWith(".JPEG") && item.getName().startsWith("IMAG_CHQ_")) {
+					listImageCheq.add(item.getAbsolutePath());
+					System.out.println(item.getName());
 				}
-			}
-			
-			
-			return listImageCheq;
-		}
-	
-	
-	
 
-	
-	public  ArrayList parcouriMap(ArrayList<HashMap> listChequesData,Set<String> listImageCheq) {
-		
+			} else if (item.isDirectory()) {
+				getAllPictFromDirectory(item.getAbsolutePath());
+			}
+		}
+
+		return listImageCheq;
+	}
+
+	public ArrayList parcouriMap(ArrayList<HashMap> listChequesData, Set<String> listImageCheq) {
+
 		ArrayList<String> listimagtrouver = new ArrayList<String>();
 
-		//start traitement cnx 
+		// start traitement cnx
 		chargerParamFromJson();
-		
-		if (checkDBcnx()) {   
+
+		if (checkDBcnx()) {
 			Connection c = startDBcnx();
-	
-		
-			
-		
 
-		for (Map<String, String> myMap : listChequesData) {
-			// Afficher le contenu du MAP
-			Set listKeys = myMap.keySet(); // Obtenir la liste des clés
-			Iterator iterateur = listKeys.iterator();
-			// Parcourir les clés et afficher les entrées de chaque clé;
-			while (iterateur.hasNext()) {
-				Object key = iterateur.next();
-				// System.out.println (key+"=>"+myMap.get(key));
-			}
-			// Afficher une entrée spécifique	
-			//listNumCheq.add(myMap.get("Cm7numCHEQ"));
-			
-			if (!(findPictures( listImageCheq,  myMap.get("Cm7numCHEQ")).isEmpty())) {
+			for (Map<String, String> myMap : listChequesData) {
+				// Afficher le contenu du MAP
+				Set listKeys = myMap.keySet(); // Obtenir la liste des clés
+				Iterator iterateur = listKeys.iterator();
+				// Parcourir les clés et afficher les entrées de chaque clé;
+				while (iterateur.hasNext()) {
+					Object key = iterateur.next();
+					// System.out.println (key+"=>"+myMap.get(key));
+				}
+				// Afficher une entrée spécifique
+				// listNumCheq.add(myMap.get("Cm7numCHEQ"));
+				Cheque cheq = new Cheque();
 
-				for (String string : findPictures( listImageCheq,  myMap.get("Cm7numCHEQ"))) {
-					// a ce niveau j'ai pour un fichier data tout les données de chaque fichier 
-					// ansique chemin path du fichier image 
-					System.out.println("test"+myMap.get("Cm7numCHEQ")+" : "+ string);
-					listimagtrouver.add(string);
-					
-					
-					Cheque cheq = new Cheque();
-					File fileR = null ;
-			    	File fileV = null;
-			    	byte[] bFileR = null ;
-					byte[] bFileV = null ;
-					
-					if (string.endsWith("R.JPEG")) {
-				    	 fileR = new File(string);
-						 bFileR = new byte[(int) fileR.length()];
+				cheq.setNumChq(myMap.get("Cm7numCHEQ"));
+				cheq.setNcpTireur(myMap.get("Cm7NumCOMPT"));
+				cheq.setAgenceTireur("00"+myMap.get("Cm7codeGuich")); 
 
-					}else if (string.endsWith("V.JPEG")) {
-				    	 fileV = new File(string);
-						 bFileV = new byte[(int) fileV.length()];
+				long l=Long.parseLong(myMap.get("MntChequ"));  
+
+				cheq.setMontant(l) ;
+
+				// (assuming you have a ResultSet named RS)
+				Blob blob = getSignature(c, myMap.get("Cm7NumCOMPT"), myMap.get("Cm7NumAgenc"));
+				// traitement du blob signature de la base amplitude to appDB
+				int blobLength;
+				try {
+					blobLength = (int) blob.length();
+					byte[] blobAsBytes = blob.getBytes(1, blobLength);
+
+					// release the blob and free up memory. (since JDBC 4.0)
+					cheq.setSignature(blobAsBytes);
+					blob.free();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				if (!(findPictures(listImageCheq, myMap.get("Cm7numCHEQ")).isEmpty())) {
+
+					for (String string : findPictures(listImageCheq, myMap.get("Cm7numCHEQ"))) {
+						// a ce niveau j'ai pour un fichier data tout les données de chaque fichier
+						// ansique chemin path du fichier image
+
+						if (myMap.get("Cm7numCHEQ").equals("1512763")) {
+							//System.out.println("test" + myMap.get("Cm7numCHEQ") + " : " + string);
+
+						}
+						System.out.println("test" + myMap.get("Cm7numCHEQ") + " : " + string);
+
+						listimagtrouver.add(string);
+
+						File fileR = null;
+						File fileV = null;
+						byte[] bFileR = null;
+						byte[] bFileV = null;
+
+						if (string.endsWith("R.JPEG")) {
+
+							fileR = new File(string);
+							bFileR = new byte[(int) fileR.length()];
+
+						} else if (string.endsWith("V.JPEG")) {
+							fileV = new File(string);
+							bFileV = new byte[(int) fileV.length()];
+
+						}
+
+						try {
+
+							if (fileR != null) {
+								FileInputStream fileInputStreamR = new FileInputStream(fileR);
+								// convert file into array of bytes
+								fileInputStreamR.read(bFileR);
+								fileInputStreamR.close();
+								cheq.setRecto(bFileR);
+
+							}
+							if (fileV != null) {
+								FileInputStream fileInputStreamV = new FileInputStream(fileV);
+
+								fileInputStreamV.read(bFileV);
+
+								fileInputStreamV.close();
+								cheq.setVerso(bFileV);
+
+							}
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						chequeRepository.save(cheq);
 
 					}
-
-					 
-					
-		    		cheq.setNumChq(myMap.get("Cm7numCHEQ"));
-		    		cheq.setNcpTireur(myMap.get("Cm7NumCOMPT"));
-		    		//mapCheq.put("Cm7NumAgenc", Cm7NumAgenc);
-		    		 
-		    		//(assuming you have a ResultSet named RS)
-		    		 Blob blob = getSignature( c, myMap.get("Cm7NumCOMPT"),myMap.get("Cm7NumAgenc") ) ;
-	 
-		    		// traitement du blob signature de la base amplitude to appDB 
-		    		 int blobLength;
-					try {
-						blobLength = (int) blob.length();
-						byte[] blobAsBytes = blob.getBytes(1, blobLength);
-
-			    		 //release the blob and free up memory. (since JDBC 4.0)
-			    		cheq.setSignature(blobAsBytes);
-			    		blob.free();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}  
-		    		 
-		    		
-		    		try {
-						FileInputStream fileInputStreamR = new FileInputStream(fileR);
-						FileInputStream fileInputStreamV = new FileInputStream(fileV);
-
-						// convert file into array of bytes
-						fileInputStreamR.read(bFileR);
-						fileInputStreamV.read(bFileV);
-
-						fileInputStreamR.close();
-						fileInputStreamV.close();
-
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}	
-		    		cheq.setRecto(bFileR);
-		    		cheq.setVerso(bFileV);
-
-		    		chequeRepository.save(cheq);
-					
-					
-					
-					
-					
 				}
-			}				
 			}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		closecnx(c);
+
+			closecnx(c);
 
 		}
-		
-		
+
 		return listimagtrouver;
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}
-	
-	
-	
-	public  List<String> findPictures(Set<String> listImageCheq2, String numCheq) {
+
+	public List<String> findPictures(Set<String> listImageCheq2, String numCheq) {
 		List<String> rectoVersoCheq = new ArrayList<String>();
 		String numeroCheq = numCheq;
 
@@ -455,69 +414,48 @@ public class ChequeService {
 			}
 		}
 		return rectoVersoCheq;
-	}	
-	
-	
+	}
 
-	public  Set<String> getAllDataFile(String pathDirectory) {
+	public Set<String> getAllDataFile(String pathDirectory) {
 		File dir = new File(pathDirectory);
 		File[] liste = dir.listFiles();
-		  Set<String> listDataFile = new HashSet<String>();
+		Set<String> listDataFile = new HashSet<String>();
 
 		for (File item : liste) {
 			if (item.isFile()) {
 				if (item.getName().endsWith(".DATA")) {
 					listDataFile.add(item.getAbsolutePath());
-					System.out.println(item.getName());	
-				}				
+					System.out.println(item.getName());
+				}
 
-			} 
+			}
 		}
-	return listDataFile;
+		return listDataFile;
 	}
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public Set<String> getImages(String repImages) {
 
 		return getAllPictFromDirectory(repImages);
 
 	}
-	
-	public  ArrayList getChequesData() {
+
+	public ArrayList getChequesData() {
 		getAllPictFromDirectory("//bank-sud.tn/shared_doc/FirasControleVisuelTst");
 		ArrayList<HashMap> k = manageDataFile("D://Donnees1003202115195704000.DATA");
 
-		Set<String> dataFiles =getAllDataFile("//DELTA07/Partage_Sof/test prod/j-10032021/DATA");
+		Set<String> dataFiles = getAllDataFile("//DELTA07/Partage_Sof/test prod/j-10032021/DATA");
 //		for (String fichierData : dataFiles) {
 //			ArrayList<HashMap> k = manageDataFile(fichierData);
 //			parcouriMap(k, listImageCheq);
 //		}
-		
-		return	parcouriMap(k, listImageCheq);
+
+		return parcouriMap(k, listImageCheq);
 
 	}
-	
-	
+
 	public Cheque addCheque(Cheque f) {
 		return chequeRepository.save(f);
 	}
-
 
 	public Cheque getCheque(Long id) {
 		return chequeRepository.findOneById(id);
